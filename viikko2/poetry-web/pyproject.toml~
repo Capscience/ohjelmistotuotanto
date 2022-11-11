@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "poetry-web"
+version = "0.1.0"
+description = ""
+authors = ["Simo Soini <simo@capscience.fi>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Flask = "^2.2.2"
+jsonpickle = "^2.2.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
