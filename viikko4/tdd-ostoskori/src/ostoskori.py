@@ -16,8 +16,11 @@ class Ostoskori:
         # samoin jos korissa on 1 kpl tuotetta "maito" ja 1 kpl tuotetta "juusto", tulee metodin palauttaa 2
 
     def hinta(self):
-        return 0
-        # kertoo korissa olevien ostosten yhteenlasketun hinnan
+        """Returns total price of items in basket."""
+        total_price = 0
+        for item in self.ostokset:
+            total_price += item.hinta()
+        return total_price
 
     def lisaa_tuote(self, lisattava: Tuote):
         """Adds the item to basket."""
