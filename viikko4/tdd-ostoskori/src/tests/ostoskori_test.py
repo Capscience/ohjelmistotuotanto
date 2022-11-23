@@ -45,3 +45,11 @@ class TestOstoskori(unittest.TestCase):
         self.kori.lisaa_tuote(voi)
 
         self.assertEqual(self.kori.hinta(), 8)
+
+    def test_kahden_saman_tuotteen_jalkeen_korissa_kaksi_tavaraa(self):
+        """Tests item count after adding 2 same items."""
+        maito = Tuote("Maito", 3)
+        self.kori.lisaa_tuote(maito)
+        self.kori.lisaa_tuote(maito)
+
+        self.assertEqual(self.kori.tavaroita_korissa(), 2)
