@@ -15,9 +15,6 @@ class Ostoskori:
         for item in self.sisalto.values():
             total_amount += item.lukumaara()
         return total_amount
-        # kertoo korissa olevien tavaroiden lukumäärän
-        # eli jos koriin lisätty 2 kpl tuotetta "maito", tulee metodin palauttaa 2
-        # samoin jos korissa on 1 kpl tuotetta "maito" ja 1 kpl tuotetta "juusto", tulee metodin palauttaa 2
 
     def hinta(self):
         """Returns total price of items in basket."""
