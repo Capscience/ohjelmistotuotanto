@@ -70,7 +70,7 @@ class TestOstoskori(unittest.TestCase):
 
         self.assertEqual(len(ostokset), 1)
 
-    def test_yhden_tuotteen_lisaamisen_jalkeen_korissa_yksi_ostosolio_jolla_oikea_tuotteen_nimi_ja_maara(self):
+    def test_1_tuotteen_lisaamisen_jalkeen_korissa_1_oikea_tuote(self):
         """Tests contents of return val of ostokset with 1 item."""
         maito = Tuote("Maito", 3)
         self.kori.lisaa_tuote(maito)
@@ -79,7 +79,7 @@ class TestOstoskori(unittest.TestCase):
         self.assertEqual(ostos.tuotteen_nimi(), "Maito")
         self.assertEqual(ostos.lukumaara(), 1)
 
-    def test_kahden_eri_tuotteen_lisaamisen_jalkeen_korissa_on_kaksi_ostosta(self):
+    def test_kahden_eri_tuotteen_lisaamisen_jalkeen_korissa_on_2_ostosta(self):
         """Test method ostokset with 2 different items."""
         maito = Tuote("Maito", 3)
         voi = Tuote("Voi", 5)
@@ -88,3 +88,12 @@ class TestOstoskori(unittest.TestCase):
         ostokset = self.kori.ostokset()
 
         self.assertEqual(len(ostokset), 2)
+
+    def test_kahden_saman_tuotteen_lisaamisen_jalkeen_korissa_on_1_ostos(self):
+        """Test method ostokset with 2 same items."""
+        maito = Tuote("Maito", 3)
+        self.kori.lisaa_tuote(maito)
+        self.kori.lisaa_tuote(maito)
+        ostokset = self.kori.ostokset()
+
+        self.assertEqual(len(ostokset), 1)
