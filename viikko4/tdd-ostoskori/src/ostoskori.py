@@ -31,8 +31,8 @@ class Ostoskori:
             self.sisalto[lisattava.nimi] = Ostos(lisattava)
 
     def poista_tuote(self, poistettava: Tuote):
-        # poistaa tuotteen
-        pass
+        """Removes one item from the basket."""
+        self.sisalto[poistettava.nimi].muuta_lukumaaraa(-1)
 
     def tyhjenna(self):
         pass
