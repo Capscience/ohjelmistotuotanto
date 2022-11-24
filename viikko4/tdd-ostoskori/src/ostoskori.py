@@ -40,8 +40,8 @@ class Ostoskori:
             del self.sisalto[poistettava.nimi]
 
     def tyhjenna(self):
-        pass
-        # tyhjentää ostoskorin
+        """Removes everything from the basket."""
+        self.sisalto.clear()
 
     def ostokset(self):
         """Returns all Ostos objects in the basket."""
