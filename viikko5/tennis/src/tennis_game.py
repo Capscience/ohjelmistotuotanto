@@ -1,57 +1,60 @@
 class TennisGame:
+    """Point counter for tennis."""
     def __init__(self, player1_name, player2_name):
         self.player1_name = player1_name
         self.player2_name = player2_name
-        self.m_score1 = 0
-        self.m_score2 = 0
+        self.player1_score = 0
+        self.player2_score = 0
+        self.score_names = {
+            0: "Love",
+            1: "Fifteen",
+            2: "Thirty",
+            3: "Forty"
+        }
 
     def won_point(self, player_name):
-        if player_name == "player1":
-            self.m_score1 = self.m_score1 + 1
+        """Give a point to one of the players."""
+        if player_name == self.player1_name:
+            self.player1_score += 1
+        elif player_name == self.player2_name:
+            self.player2_score += 1
         else:
-            self.m_score2 = self.m_score2 + 1
+            pass
 
-    def get_score(self):
-        score = ""
-        temp_score = 0
+    def _even_score_reading(self) -> str:
+        """Get score reading for even scores."""
+        if self.player1_score >= 4:
+            return "Deuce"
+        return f"{self.score_names[self.player1_score]}-All"
 
-        if self.m_score1 == self.m_score2:
-            if self.m_score1 == 0:
-                score = "Love-All"
-            elif self.m_score1 == 1:
-                score = "Fifteen-All"
-            elif self.m_score1 == 2:
-                score = "Thirty-All"
-            elif self.m_score1 == 3:
-                score = "Forty-All"
-            else:
-                score = "Deuce"
-        elif self.m_score1 >= 4 or self.m_score2 >= 4:
-            minus_result = self.m_score1 - self. m_score2
+    def _player_in_lead(self) -> str:
+        """Get the name of the player with higher points.
 
-            if minus_result == 1:
-                score = "Advantage player1"
-            elif minus_result == -1:
-                score = "Advantage player2"
-            elif minus_result >= 2:
-                score = "Win for player1"
-            else:
-                score = "Win for player2"
+        If scores are same, returns empty string.
+        """
+        if self.player1_score > self.player2_score:
+            return self.player1_name
+        elif self.player1_score < self.player2_score:
+            return self.player2_name
         else:
-            for i in range(1, 3):
-                if i == 1:
-                    temp_score = self.m_score1
-                else:
-                    score = score + "-"
-                    temp_score = self.m_score2
+            return ''
 
-                if temp_score == 0:
-                    score = score + "Love"
-                elif temp_score == 1:
-                    score = score + "Fifteen"
-                elif temp_score == 2:
-                    score = score + "Thirty"
-                elif temp_score == 3:
-                    score = score + "Forty"
+    def _uneven_score_set_point_reading(self) -> str:
+        """Get score reading for set points when set is not even."""
+        point_diff = abs(self.player1_score - self.player2_score)
+        if point_diff == 1:
+            return f"Advantage {self._player_in_lead()}"
+        return f"Win for {self._player_in_lead()}"
 
-        return score
+    def _uneven_score_reading(self) -> str:
+        """Get score reading for points where set score is not even."""
+        return (f"{self.score_names[self.player1_score]}-"
+                f"{self.score_names[self.player2_score]}")
+
+    def get_score(self) -> str:
+        """Get score reading of the game."""
+        if self.player1_score == self.player2_score:
+            return self._even_score_reading()
+        elif max(self.player1_score, self.player2_score) >= 4:
+            return self._uneven_score_set_point_reading()
+        return self._uneven_score_reading()
