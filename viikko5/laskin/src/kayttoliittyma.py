@@ -10,13 +10,21 @@ class Komento(Enum):
 
 
 class Kayttoliittyma:
-    def __init__(self, sovellus, root):
-        self._sovellus = sovellus
+    def __init__(self, sovelluslogiikka, root):
+        self._sovelluslogiikka = sovelluslogiikka
         self._root = root
+        self._edellinen = self._sovelluslogiikka.tulos
+
+        self._komennot = {
+            Komento.SUMMA: Summa(sovelluslogiikka, self._lue_syote),
+            Komento.EROTUS: Erotus(sovelluslogiikka, self._lue_syote),
+            Komento.NOLLAUS: Nollaus(sovelluslogiikka),
+            Komento.KUMOA: Kumoa(sovelluslogiikka, self._lue_edellinen)
+        }
 
     def kaynnista(self):
         self._tulos_var = StringVar()
-        self._tulos_var.set(self._sovellus.tulos)
+        self._tulos_var.set(self._sovelluslogiikka.tulos)
         self._syote_kentta = ttk.Entry(master=self._root)
 
         tulos_teksti = ttk.Label(textvariable=self._tulos_var)
@@ -54,29 +62,58 @@ class Kayttoliittyma:
         self._nollaus_painike.grid(row=2, column=2)
         self._kumoa_painike.grid(row=2, column=3)
 
+    def _lue_syote(self):
+        return self._syote_kentta.get()
+
+    def _lue_edellinen(self):
+        return self._edellinen
+
     def _suorita_komento(self, komento):
-        arvo = 0
-
-        try:
-            arvo = int(self._syote_kentta.get())
-        except Exception:
-            pass
-
-        if komento == Komento.SUMMA:
-            self._sovellus.plus(arvo)
-        elif komento == Komento.EROTUS:
-            self._sovellus.miinus(arvo)
-        elif komento == Komento.NOLLAUS:
-            self._sovellus.nollaa()
-        elif komento == Komento.KUMOA:
-            pass
-
+        komento_olio = self._komennot[komento]
+        if not isinstance(komento_olio, Kumoa):
+            self._edellinen = self._sovelluslogiikka.tulos
+        komento_olio.suorita()
         self._kumoa_painike["state"] = constants.NORMAL
 
-        if self._sovellus.tulos == 0:
+        if self._sovelluslogiikka.tulos == 0:
             self._nollaus_painike["state"] = constants.DISABLED
         else:
             self._nollaus_painike["state"] = constants.NORMAL
 
         self._syote_kentta.delete(0, constants.END)
-        self._tulos_var.set(self._sovellus.tulos)
+        self._tulos_var.set(self._sovelluslogiikka.tulos)
+
+
+class Summa:
+    def __init__(self, sovelluslogiikka, lue_syote):
+        self.sovelluslogiikka = sovelluslogiikka
+        self._lue_syote = lue_syote
+
+    def suorita(self):
+        self.sovelluslogiikka.plus(int(self._lue_syote()))
+
+
+class Erotus:
+    def __init__(self, sovelluslogiikka, lue_syote):
+        self._sovelluslogiikka = sovelluslogiikka
+        self._lue_syote = lue_syote
+
+    def suorita(self):
+        self._sovelluslogiikka.miinus(int(self._lue_syote()))
+
+
+class Nollaus:
+    def __init__(self, sovelluslogiikka):
+        self._sovelluslogiikka = sovelluslogiikka
+
+    def suorita(self):
+        self._sovelluslogiikka.nollaa()
+
+
+class Kumoa:
+    def __init__(self, sovelluslogiikka, lue_edellinen):
+        self._sovelluslogiikka = sovelluslogiikka
+        self._lue_edellinen = lue_edellinen
+
+    def suorita(self):
+        self._sovelluslogiikka.aseta_arvo(self._lue_edellinen())
